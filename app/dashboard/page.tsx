@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { getAuthUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import DashboardClient from './DashboardClient'
@@ -22,6 +23,8 @@ export default async function DashboardPage() {
   ])
 
   if (!user) {
+    const cookieStore = await cookies()
+    cookieStore.delete('token')
     redirect('/login')
   }
 
