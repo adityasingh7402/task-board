@@ -9,11 +9,5 @@ export async function getAuthUser() {
     return null
   }
   
-  const payload = verifyJWT(token)
-  if (!payload) {
-    cookieStore.delete('token')
-    return null
-  }
-  
-  return payload
+  return verifyJWT(token)
 }

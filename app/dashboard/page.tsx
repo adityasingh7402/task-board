@@ -5,9 +5,14 @@ import { prisma } from '@/lib/prisma'
 import DashboardClient from './DashboardClient'
 
 export default async function DashboardPage() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('token')?.value
   const userPayload = await getAuthUser()
 
   if (!userPayload) {
+    if (token) {
+      redirect('/api/auth/logout?redirect=/login')
+    }
     redirect('/login')
   }
 
@@ -23,9 +28,7 @@ export default async function DashboardPage() {
   ])
 
   if (!user) {
-    const cookieStore = await cookies()
-    cookieStore.delete('token')
-    redirect('/login')
+    redirect('/api/auth/logout?redirect=/login')
   }
 
   // Serialize Date objects before passing to client component
