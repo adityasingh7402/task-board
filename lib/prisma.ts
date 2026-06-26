@@ -6,20 +6,18 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-let prismaClient: PrismaClient
-
-if (globalForPrisma.prisma) {
-  prismaClient = globalForPrisma.prisma
-} else {
+function createPrismaClient() {
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
+    max: 1,                 // Serverless-friendly: limit to 1 connection
+    idleTimeoutMillis: 0,   // Close idle connections immediately
   })
   const adapter = new PrismaPg(pool)
-  prismaClient = new PrismaClient({ adapter })
-
-  if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = prismaClient
-  }
+  return new PrismaClient({ adapter })
 }
 
-export const prisma = prismaClient
+export const prisma = globalForPrisma.prisma ?? createPrismaClient()
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma
+}
