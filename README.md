@@ -209,4 +209,4 @@ All authenticated routes validate the JWT cookie. Each task is scoped to the aut
 
 ## Live URL
 
-Optional — deploy to [Vercel](https://vercel.com) by connecting the repository.
+Optional — deploy to [Vercel](https://vercel.com) by connecting the repository. (Note: Make sure to configure the DATABASE_URL with the connection pooler on port 6543 for serverless environments).
