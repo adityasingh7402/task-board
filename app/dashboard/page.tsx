@@ -26,7 +26,7 @@ export default async function DashboardPage() {
   }
 
   // Serialize Date objects before passing to client component
-  const initialTasks = tasks.map((t) => ({
+  const initialTasks = tasks.map((t: { id: string; title: string; status: string; userId: string; createdAt: Date }) => ({
     ...t,
     createdAt: t.createdAt.toISOString(),
     status: t.status as 'Todo' | 'In Progress' | 'Done',
